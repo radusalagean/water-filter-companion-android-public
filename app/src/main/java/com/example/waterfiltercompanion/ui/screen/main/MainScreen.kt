@@ -19,7 +19,7 @@ fun MainScreen(viewModel: MainViewModel) {
             Ring(
                 bgColor = MaterialTheme.colors.ColorRingBackground,
                 fgColor = MaterialTheme.colors.ColorRingForeground,
-                fill = 0.5f
+                fill = 0.9f
             )
         }
     }
