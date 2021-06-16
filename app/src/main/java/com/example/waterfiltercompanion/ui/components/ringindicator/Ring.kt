@@ -37,7 +37,8 @@ fun Ring(
     modifier: Modifier = Modifier,
     bgColor: Color,
     fgColor: Color,
-    fill: Float
+    fill: Float,
+    fgFillCb: ((Float) -> Unit)? = null
 ) {
     var bgStroke: Stroke
     var fgStroke: Stroke
@@ -81,16 +82,24 @@ fun Ring(
     ) { currentState ->
         if (currentState == TransitionState.FILLED) 180f * fill else 0f
     }
+    val fgFill by transition.animateFloat(
+        transitionSpec = {
+            tween(durationMillis = 400)
+        },
+        label = "fgFill"
+    ) { currentState ->
+        if (currentState == TransitionState.FILLED) fill else 0f
+    }
+    LaunchedEffect(fgFill) {
+        fgFillCb?.invoke(fgFill)
+    }
     LaunchedEffect(transitionState.currentState) {
         transitionState.targetState = when(transitionState.currentState) {
             TransitionState.INIT_START -> TransitionState.INIT_END
             else -> TransitionState.FILLED
         }
     }
-    Canvas(
-        modifier
-            .fillMaxWidth()
-            .height(300.dp)) {
+    Canvas(modifier) {
         val innerRadius = (size.minDimension - maxStroke) / 2
         val halfSize = size / 2f
         val topLeft = Offset(

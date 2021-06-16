@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Water Filter Companion</string>
+    <string name="not_available">N/A</string>
+
+<!--    Ring Indicator-->
+    <string name="ring_indicator_remaining_capacity_percentage_format">%d%%</string>
+    <plurals name="ring_indicator_days_in_use_format">
+        <item quantity="one">%d day in use</item>
+        <item quantity="other">%d days in use</item>
+    </plurals>
+    <string name="ring_indicator_remaining_capacity_label">Remaining capacity</string>
 </resources>
