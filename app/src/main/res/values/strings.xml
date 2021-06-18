@@ -14,10 +14,10 @@
     <string name="details_card_total_label">Total</string>
     <string name="details_card_remaining_label">Remaining</string>
     <string name="details_card_installed_on_label">Installed on</string>
-
-<!--    Details Card-->
     <string name="details_card_edit">Edit</string>
     <string name="details_card_clear_data">Clear data</string>
     <string name="details_card_cancel">Cancel</string>
     <string name="details_card_save">Save</string>
+    <string name="details_card_total_format">%d L</string>
+    <string name="details_card_remaining_format">%d L</string>
 </resources>

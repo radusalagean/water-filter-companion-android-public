@@ -1,6 +1,7 @@
 package com.example.waterfiltercompanion.ui.utils
 
 import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,6 +27,21 @@ fun quantityStringResourceWithFallback(
     return if (quantity != null)
         quantityStringResource(id, quantity)
     else stringResource(R.string.not_available)
+}
+
+@Composable
+fun stringResourceWithFallback(
+    @StringRes stringResFormat: Int,
+    argument: Any?
+): String {
+    return if (argument != null)
+        stringResource(stringResFormat, argument)
+    else stringResource(R.string.not_available)
+}
+
+@Composable
+fun stringWithFallback(string: String?): String {
+    return string ?: stringResource(R.string.not_available)
 }
 
 fun Modifier.debugBorder(color: Color = Color.Red): Modifier = this.border(
