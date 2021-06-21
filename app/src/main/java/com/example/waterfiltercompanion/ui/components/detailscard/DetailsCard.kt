@@ -21,9 +21,15 @@ import com.example.waterfiltercompanion.ui.components.detailscard.content.item.D
 fun DetailsCard(
     modifier: Modifier = Modifier,
     editMode: Boolean,
+    // Total Capacity
     totalCapacity: Int?,
+    onTotalCapacityClick: () -> Unit,
+    // Remaining Capacity
     remainingCapacity: Int?,
+    onRemainingCapacityClick: () -> Unit,
+    // Installed On
     installedOnFormatted: String?,
+    onInstalledOnClick: () -> Unit,
     // Callbacks
     onEdit: () -> Unit,
     onClearData: () -> Unit,
@@ -34,9 +40,13 @@ fun DetailsCard(
         Column(Modifier.padding(8.dp)) {
             // Details Content
             DetailsContent(
+                editMode = editMode,
                 totalCapacity = totalCapacity,
+                onTotalCapacityClick = onTotalCapacityClick,
                 remainingCapacity = remainingCapacity,
-                installedOnFormatted = installedOnFormatted
+                onRemainingCapacityClick = onRemainingCapacityClick,
+                installedOnFormatted = installedOnFormatted,
+                onInstalledOnClick = onInstalledOnClick
             )
             // Details Actions
             DetailsActions(

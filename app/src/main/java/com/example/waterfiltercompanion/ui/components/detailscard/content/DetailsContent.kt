@@ -14,9 +14,16 @@ import com.example.waterfiltercompanion.ui.utils.stringWithFallback
 @Composable
 fun DetailsContent(
     modifier: Modifier = Modifier,
+    editMode: Boolean,
+    // Total Capacity
     totalCapacity: Int?,
+    onTotalCapacityClick: () -> Unit,
+    // Remaining Capacity
     remainingCapacity: Int?,
-    installedOnFormatted: String?
+    onRemainingCapacityClick: () -> Unit,
+    // Installed On
+    installedOnFormatted: String?,
+    onInstalledOnClick: () -> Unit
 ) {
     Row(
         modifier
@@ -26,7 +33,9 @@ fun DetailsContent(
         DetailsContentItem(
             modifier = itemModifier,
             value = stringResourceWithFallback(R.string.details_card_total_format, totalCapacity),
-            label = stringResource(R.string.details_card_total_label)
+            label = stringResource(R.string.details_card_total_label),
+            onClick = onTotalCapacityClick,
+            editMode = editMode
         )
         Divider(
             Modifier
@@ -35,7 +44,9 @@ fun DetailsContent(
         DetailsContentItem(
             modifier = itemModifier,
             value = stringResourceWithFallback(R.string.details_card_remaining_format, remainingCapacity),
-            label = stringResource(R.string.details_card_remaining_label)
+            label = stringResource(R.string.details_card_remaining_label),
+            onClick = onRemainingCapacityClick,
+            editMode = editMode
         )
         Divider(
             Modifier
@@ -44,7 +55,9 @@ fun DetailsContent(
         DetailsContentItem(
             modifier = itemModifier,
             value = stringWithFallback(installedOnFormatted),
-            label = stringResource(R.string.details_card_installed_on_label)
+            label = stringResource(R.string.details_card_installed_on_label),
+            onClick = onInstalledOnClick,
+            editMode = editMode
         )
     }
 }

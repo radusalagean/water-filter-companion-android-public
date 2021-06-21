@@ -1,10 +1,13 @@
 package com.example.waterfiltercompanion.ui.screen.main
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import com.example.waterfiltercompanion.common.date.DateHelper
+import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialogConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.example.waterfiltercompanion.R
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -16,6 +19,9 @@ class MainViewModel @Inject constructor(
     var totalCapacity: Int? by mutableStateOf(null)
     var remainingCapacity: Int? by mutableStateOf(null)
     var installedOn: Long? by mutableStateOf(null)
+
+    // Dialogs
+    var capacityInputDialogConfig: CapacityInputDialogConfig? by mutableStateOf(null)
 
     // Derived states
     val installedOnFormatted: String? by derivedStateOf {
@@ -56,6 +62,32 @@ class MainViewModel @Inject constructor(
 
     fun onClearData() {
 
+    }
+
+    fun onTotalCapacityClick() {
+        capacityInputDialogConfig = CapacityInputDialogConfig(
+            titleStringRes = R.string.capacity_input_dialog_total_title,
+            initialInput = totalCapacity?.toString(),
+            onSubmit = {},
+            onDismiss = {
+                capacityInputDialogConfig = null
+            }
+        )
+    }
+
+    fun onRemainingCapacityClick() {
+        capacityInputDialogConfig = CapacityInputDialogConfig(
+            titleStringRes = R.string.capacity_input_dialog_remaining_title,
+            initialInput = remainingCapacity?.toString(),
+            onSubmit = {},
+            onDismiss = {
+                capacityInputDialogConfig = null
+            }
+        )
+    }
+
+    fun onInstalledOnClick() {
+        Log.d("MainViewModel", "onInstalledOnClick")
     }
 
     private fun areCapacityValuesValid(tc: Int, rc: Int): Boolean {
