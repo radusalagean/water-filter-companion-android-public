@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 fun DetailsContentItem(
     modifier: Modifier = Modifier,
     value: String,
+    candidateValue: String,
     label: String,
     editMode: Boolean,
     onClick: () -> Unit
@@ -26,7 +27,7 @@ fun DetailsContentItem(
                 role = Role.Button,
                 onClick = onClick
             ),
-            value = value
+            value = if (editMode) candidateValue else value
         )
         DetailsContentItemLabel(
             modifier = itemModifier,

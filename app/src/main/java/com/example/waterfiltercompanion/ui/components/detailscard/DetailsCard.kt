@@ -24,12 +24,15 @@ fun DetailsCard(
     // Total Capacity
     totalCapacity: Int?,
     onTotalCapacityClick: () -> Unit,
+    totalCapacityCandidate: String?,
     // Remaining Capacity
     remainingCapacity: Int?,
     onRemainingCapacityClick: () -> Unit,
+    remainingCapacityCandidate: String?,
     // Installed On
     installedOnFormatted: String?,
     onInstalledOnClick: () -> Unit,
+    installedOnCandidateFormatted: String?,
     // Callbacks
     onEdit: () -> Unit,
     onClearData: () -> Unit,
@@ -43,10 +46,13 @@ fun DetailsCard(
                 editMode = editMode,
                 totalCapacity = totalCapacity,
                 onTotalCapacityClick = onTotalCapacityClick,
+                totalCapacityCandidate = totalCapacityCandidate,
                 remainingCapacity = remainingCapacity,
                 onRemainingCapacityClick = onRemainingCapacityClick,
+                remainingCapacityCandidate = remainingCapacityCandidate,
                 installedOnFormatted = installedOnFormatted,
-                onInstalledOnClick = onInstalledOnClick
+                onInstalledOnClick = onInstalledOnClick,
+                installedOnCandidateFormatted = installedOnCandidateFormatted
             )
             // Details Actions
             DetailsActions(
