@@ -1,6 +1,5 @@
 package com.example.waterfiltercompanion.ui.screen.main
 
-import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,14 +8,17 @@ import com.example.waterfiltercompanion.ui.components.capacityinputdialog.Capaci
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.waterfiltercompanion.R
+import com.example.waterfiltercompanion.datapersistence.DataModel
+import com.example.waterfiltercompanion.datapersistence.LocalRepository
+import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialogConfig
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val dateHelper: DateHelper
+    private val dateHelper: DateHelper,
+    private val localRepository: LocalRepository
 ) : ViewModel() {
 
     // Global state
@@ -32,6 +34,7 @@ class MainViewModel @Inject constructor(
 
     // Dialogs
     var capacityInputDialogConfig: CapacityInputDialogConfig? by mutableStateOf(null)
+    var confirmationDialogConfig: ConfirmationDialogConfig? by mutableStateOf(null)
 
     // Derived states
     val installedOnFormatted: String? by derivedStateOf {
@@ -56,13 +59,21 @@ class MainViewModel @Inject constructor(
     val eventsFlow = eventsChannel.receiveAsFlow()
 
     init {
-        loadData()
+        loadDataAsync()
     }
 
-    fun loadData() {
-        totalCapacity = 200
-        remainingCapacity = 500
-        installedOn = 1622494800000L
+    private fun loadDataAsync() {
+        viewModelScope.launch {
+            loadDataSync()
+        }
+    }
+
+    private suspend fun loadDataSync() {
+        localRepository.getData().let { model ->
+            totalCapacity = model.totalCapacity
+            remainingCapacity = model.remainingCapacity
+            installedOn = model.installedOn
+        }
     }
 
     fun onEdit() {
@@ -71,16 +82,56 @@ class MainViewModel @Inject constructor(
     }
 
     fun onCancel() {
+        leaveEditMode()
+    }
+
+    private fun leaveEditMode() {
         editMode = false
         clearCandidateValues()
     }
 
     fun onSave() {
-
+        val tc = totalCapacityCandidate?.toIntOrNull()
+        val rc = remainingCapacityCandidate?.toIntOrNull()
+        val io = installedOnCandidate
+        if (tc == null || rc == null || io == null ||
+            !areCapacityValuesValid(tc = tc, rc = rc) ||
+            io > System.currentTimeMillis()) {
+            // TODO Add message
+            return
+        }
+        viewModelScope.launch {
+            val dataModel = DataModel(
+                totalCapacity = totalCapacityCandidate?.toIntOrNull(),
+                remainingCapacity = remainingCapacityCandidate?.toIntOrNull(),
+                installedOn = installedOnCandidate
+            )
+            localRepository.setData(dataModel)
+            loadDataSync()
+            leaveEditMode()
+        }
     }
 
     fun onClearData() {
+        confirmationDialogConfig = ConfirmationDialogConfig(
+            titleStringRes = R.string.clear_data_confirmation_dialog_title,
+            onCancel = ::onClearDataCancel,
+            onConfirm = ::onClearDataConfirm
+        )
+    }
 
+    fun onClearDataCancel() {
+        confirmationDialogConfig = null
+    }
+
+    fun onClearDataConfirm() {
+        viewModelScope.launch {
+            localRepository.clearData()
+            loadDataSync()
+            confirmationDialogConfig = null
+            leaveEditMode()
+            // TODO Add message
+        }
     }
 
     fun onTotalCapacityClick() {

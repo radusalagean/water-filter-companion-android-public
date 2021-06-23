@@ -5,6 +5,7 @@ buildscript {
         hiltVersion = '2.37'
         constraintLayoutComposeVersion = '1.0.0-alpha07'
         materialDialogsVersion = '3.3.0'
+        preferenceVersion = '1.1.1'
     }
     repositories {
         google()

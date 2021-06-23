@@ -1,6 +1,7 @@
 package com.example.waterfiltercompanion.ui.components.capacityinputdialog
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -48,7 +50,11 @@ fun CapacityInputDialog(modifier: Modifier = Modifier, config: CapacityInputDial
                     textStyle = MaterialTheme.typography.h4.copy(textAlign = TextAlign.Center),
                     keyboardOptions = KeyboardOptions(
                         autoCorrect = false,
-                        keyboardType = KeyboardType.Number
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = { onSubmit(input, config) }
                     )
                 )
             }
@@ -72,13 +78,19 @@ fun CapacityInputDialog(modifier: Modifier = Modifier, config: CapacityInputDial
                 }
                 TextButton(
                     modifier = buttonModifier,
-                    onClick = { config.onSubmit(input) }
+                    onClick = { onSubmit(input, config) }
                 ) {
                     Text(text = stringResource(R.string.capacity_input_dialog_submit).uppercase())
                 }
             }
         }
     )
+}
+
+private fun onSubmit(input: String, config: CapacityInputDialogConfig) {
+    if (input.isNotEmpty()) {
+        config.onSubmit(input)
+    }
 }
 
 /**

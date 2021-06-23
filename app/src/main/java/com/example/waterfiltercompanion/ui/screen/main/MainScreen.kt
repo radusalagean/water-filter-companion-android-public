@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialog
+import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialog
 import com.example.waterfiltercompanion.ui.components.detailscard.DetailsCard
 import com.example.waterfiltercompanion.ui.components.ringindicator.RingIndicator
 import com.example.waterfiltercompanion.ui.theme.WaterFilterCompanionTheme
@@ -49,6 +50,7 @@ fun MainScreen(viewModel: MainViewModel) {
                 )
             }
             CapacityInputDialog(config = viewModel.capacityInputDialogConfig)
+            ConfirmationDialog(config = viewModel.confirmationDialogConfig)
         }
     }
 }

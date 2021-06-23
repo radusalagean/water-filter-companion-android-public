@@ -26,4 +26,11 @@
     <string name="capacity_input_dialog_submit">Submit</string>
     <string name="capacity_input_dialog_total_title">Total Capacity (L)</string>
     <string name="capacity_input_dialog_remaining_title">Remaining Capacity (L)</string>
+
+<!--    Confirmation Dialog-->
+    <string name="confirmation_dialog_confirm">Confirm</string>
+    <string name="confirmation_dialog_cancel">Cancel</string>
+
+<!--    Clear Data Confirmation-->
+    <string name="clear_data_confirmation_dialog_title">Clear data?</string>
 </resources>

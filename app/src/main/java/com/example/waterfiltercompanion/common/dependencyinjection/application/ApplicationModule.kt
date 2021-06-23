@@ -1,9 +1,12 @@
 package com.example.waterfiltercompanion.common.dependencyinjection.application
 
+import android.app.Application
 import android.content.Context
-import com.example.waterfiltercompanion.Application
+import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import com.example.waterfiltercompanion.common.date.DateHelper
 import com.example.waterfiltercompanion.common.dependencyinjection.DiConstants
+import com.example.waterfiltercompanion.datapersistence.LocalRepository
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -23,4 +26,16 @@ class ApplicationModule {
     @Provides
     @Reusable
     fun provideDateHelper() = DateHelper()
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(
+        @Named(DiConstants.APPLICATION_CONTEXT) context: Context
+    ): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+    @Provides
+    @Reusable
+    fun provideLocalRepository(
+        sharedPreferences: SharedPreferences
+    ): LocalRepository = LocalRepository(sharedPreferences)
 }
