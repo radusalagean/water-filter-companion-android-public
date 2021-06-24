@@ -73,7 +73,7 @@ fun InfoBar(
                         horizontal = 8.dp,
                         vertical = 4.dp
                     ),
-                    text = stringResource(message.textStringRes),
+                    text = stringResourceForMessage(message),
                     color = message.type.fgColor,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
@@ -98,4 +98,11 @@ private suspend fun showMessage(
     delay(TimeUnit.SECONDS.toMillis(offeredMessage.displayTimeSeconds))
     isShown.value = false
     onMessageTimeout()
+}
+
+@Composable
+private fun stringResourceForMessage(message: InfoBarMessage): String {
+    return message.args?.let {
+        stringResource(message.textStringRes, *message.args.toTypedArray())
+    } ?: stringResource(message.textStringRes)
 }

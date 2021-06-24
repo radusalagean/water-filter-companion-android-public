@@ -13,6 +13,7 @@ import com.example.waterfiltercompanion.datapersistence.LocalRepository
 import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialogConfig
 import com.example.waterfiltercompanion.ui.components.infobar.InfoBarMessage
 import com.example.waterfiltercompanion.ui.components.infobar.InfoBarType
+import com.example.waterfiltercompanion.watercontrol.ConsumeWaterUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -20,7 +21,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val dateHelper: DateHelper,
-    private val localRepository: LocalRepository
+    private val localRepository: LocalRepository,
+    private val consumeWaterUseCase: ConsumeWaterUseCase
 ) : ViewModel() {
 
     // Global state
@@ -57,6 +59,9 @@ class MainViewModel @Inject constructor(
         if (tc != null && rc != null && areCapacityValuesValid(tc = tc, rc = rc)) {
             rc.toFloat() / tc.toFloat()
         } else 0f
+    }
+    val consumeFabVisible: Boolean by derivedStateOf {
+        !editMode && remainingCapacity?.let { it >= ConsumeWaterUseCase.UNITS_TO_CONSUME } ?: false
     }
 
     // Events
@@ -190,6 +195,18 @@ class MainViewModel @Inject constructor(
 
     fun onInfoBarMessageTimeout() {
         infoBarMessage = null
+    }
+
+    fun onConsume() {
+        viewModelScope.launch {
+            consumeWaterUseCase(currentCapacity = remainingCapacity)
+            remainingCapacity = localRepository.getRemainingCapacity()
+            infoBarMessage = InfoBarMessage(
+                type = InfoBarType.INFO,
+                textStringRes = R.string.message_consumed,
+                args = listOf(ConsumeWaterUseCase.UNITS_TO_CONSUME)
+            )
+        }
     }
 
     private fun syncCandidateValues() {

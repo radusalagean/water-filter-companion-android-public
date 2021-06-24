@@ -7,6 +7,7 @@ import androidx.preference.PreferenceManager
 import com.example.waterfiltercompanion.common.date.DateHelper
 import com.example.waterfiltercompanion.common.dependencyinjection.DiConstants
 import com.example.waterfiltercompanion.datapersistence.LocalRepository
+import com.example.waterfiltercompanion.watercontrol.ConsumeWaterUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -38,4 +39,10 @@ class ApplicationModule {
     fun provideLocalRepository(
         sharedPreferences: SharedPreferences
     ): LocalRepository = LocalRepository(sharedPreferences)
+
+    @Provides
+    @Reusable
+    fun provideConsumeWaterUseCase(
+        localRepository: LocalRepository
+    ): ConsumeWaterUseCase = ConsumeWaterUseCase(localRepository)
 }

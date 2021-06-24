@@ -38,6 +38,20 @@ class LocalRepository(
         }
     }
 
+    suspend fun setRemainingCapacity(remainingCapacity: Int) {
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit()
+                .putInt(PREF_REMAINING_CAPACITY, remainingCapacity)
+                .commit()
+        }
+    }
+
+    suspend fun getRemainingCapacity(): Int? {
+        return withContext(Dispatchers.IO) {
+            getIntOrNull(PREF_REMAINING_CAPACITY)
+        }
+    }
+
     private fun getIntOrNull(key: String): Int? {
         return if (sharedPreferences.contains(key)) {
             sharedPreferences.getInt(key, 0)

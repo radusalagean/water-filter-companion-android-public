@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialog
 import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialog
+import com.example.waterfiltercompanion.ui.components.consumewaterfab.ConsumeWaterFab
 import com.example.waterfiltercompanion.ui.components.detailscard.DetailsCard
 import com.example.waterfiltercompanion.ui.components.infobar.InfoBar
 import com.example.waterfiltercompanion.ui.components.ringindicator.RingIndicator
@@ -53,6 +54,11 @@ fun MainScreen(viewModel: MainViewModel) {
                         onClearData = viewModel::onClearData
                     )
                 }
+                ConsumeWaterFab(
+                    modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+                    isShown = viewModel.consumeFabVisible,
+                    onConsume = viewModel::onConsume
+                )
                 CapacityInputDialog(config = viewModel.capacityInputDialogConfig)
                 ConfirmationDialog(config = viewModel.confirmationDialogConfig)
                 InfoBar(
