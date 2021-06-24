@@ -11,6 +11,8 @@ import com.example.waterfiltercompanion.R
 import com.example.waterfiltercompanion.datapersistence.DataModel
 import com.example.waterfiltercompanion.datapersistence.LocalRepository
 import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialogConfig
+import com.example.waterfiltercompanion.ui.components.infobar.InfoBarMessage
+import com.example.waterfiltercompanion.ui.components.infobar.InfoBarType
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -35,6 +37,9 @@ class MainViewModel @Inject constructor(
     // Dialogs
     var capacityInputDialogConfig: CapacityInputDialogConfig? by mutableStateOf(null)
     var confirmationDialogConfig: ConfirmationDialogConfig? by mutableStateOf(null)
+
+    // Info Bar
+    var infoBarMessage: InfoBarMessage? by mutableStateOf(null)
 
     // Derived states
     val installedOnFormatted: String? by derivedStateOf {
@@ -97,7 +102,11 @@ class MainViewModel @Inject constructor(
         if (tc == null || rc == null || io == null ||
             !areCapacityValuesValid(tc = tc, rc = rc) ||
             io > System.currentTimeMillis()) {
-            // TODO Add message
+            infoBarMessage = InfoBarMessage(
+                type = InfoBarType.ERROR,
+                textStringRes = R.string.message_invalid_input,
+                displayTimeSeconds = 5L
+            )
             return
         }
         viewModelScope.launch {
@@ -109,6 +118,10 @@ class MainViewModel @Inject constructor(
             localRepository.setData(dataModel)
             loadDataSync()
             leaveEditMode()
+            infoBarMessage = InfoBarMessage(
+                type = InfoBarType.INFO,
+                textStringRes = R.string.message_data_saved
+            )
         }
     }
 
@@ -130,7 +143,10 @@ class MainViewModel @Inject constructor(
             loadDataSync()
             confirmationDialogConfig = null
             leaveEditMode()
-            // TODO Add message
+            infoBarMessage = InfoBarMessage(
+                type = InfoBarType.WARN,
+                textStringRes = R.string.message_data_cleared
+            )
         }
     }
 
@@ -170,6 +186,10 @@ class MainViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    fun onInfoBarMessageTimeout() {
+        infoBarMessage = null
     }
 
     private fun syncCandidateValues() {

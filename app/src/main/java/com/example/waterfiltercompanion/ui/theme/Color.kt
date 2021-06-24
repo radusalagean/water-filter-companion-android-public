@@ -14,3 +14,9 @@ val Colors.ColorRingBackground: Color
 
 val Colors.ColorRingForeground: Color
     get() = if (isLight) Color(0xFF00CEE6) else Color(0xFF00E5FF)
+
+// Info Bar
+val ColorInfoBarInfoBg = Color(0xFF0BB637)
+val ColorInfoBarWarnBg = Color(0xFFFF6F00)
+val ColorInfoBarErrorBg = Color(0xFFFF0000)
+val ColorInfoBarFg = Color.White
