@@ -1,19 +1,12 @@
 package com.example.waterfiltercompanion.ui.screen.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.example.waterfiltercompanion.common.dialog.MaterialDialogHelper
-import com.example.waterfiltercompanion.ui.theme.WaterFilterCompanionTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -56,5 +49,13 @@ class MainActivity : ComponentActivity() {
         super.onStop()
         eventsJob?.cancel()
         eventsJob = null
+    }
+
+    override fun onBackPressed() {
+        if (viewModel.editMode) {
+            viewModel.leaveEditMode()
+        } else {
+            super.onBackPressed()
+        }
     }
 }

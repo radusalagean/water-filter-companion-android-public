@@ -1,22 +1,25 @@
 package com.example.waterfiltercompanion.ui.screen.main
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.waterfiltercompanion.common.date.DateHelper
-import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialogConfig
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import com.example.waterfiltercompanion.R
+import com.example.waterfiltercompanion.common.date.DateHelper
 import com.example.waterfiltercompanion.datapersistence.DataModel
 import com.example.waterfiltercompanion.datapersistence.LocalRepository
+import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialogConfig
 import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialogConfig
 import com.example.waterfiltercompanion.ui.components.infobar.InfoBarMessage
 import com.example.waterfiltercompanion.ui.components.infobar.InfoBarType
 import com.example.waterfiltercompanion.watercontrol.ConsumeWaterUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -27,21 +30,31 @@ class MainViewModel @Inject constructor(
 
     // Global state
     var editMode by mutableStateOf(false)
+        private set
     var totalCapacity: Int? by mutableStateOf(null)
+        private set
     var remainingCapacity: Int? by mutableStateOf(null)
+        private set
     var installedOn: Long? by mutableStateOf(null)
+        private set
 
     // Candidate values
     var totalCapacityCandidate: String? by mutableStateOf(null)
+        private set
     var remainingCapacityCandidate: String? by mutableStateOf(null)
+        private set
     var installedOnCandidate: Long? by mutableStateOf(null)
+        private set
 
     // Dialogs
     var capacityInputDialogConfig: CapacityInputDialogConfig? by mutableStateOf(null)
+        private set
     var confirmationDialogConfig: ConfirmationDialogConfig? by mutableStateOf(null)
+        private set
 
     // Info Bar
     var infoBarMessage: InfoBarMessage? by mutableStateOf(null)
+        private set
 
     // Derived states
     val installedOnFormatted: String? by derivedStateOf {
@@ -95,7 +108,7 @@ class MainViewModel @Inject constructor(
         leaveEditMode()
     }
 
-    private fun leaveEditMode() {
+    fun leaveEditMode() {
         editMode = false
         clearCandidateValues()
     }

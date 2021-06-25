@@ -1,6 +1,5 @@
 package com.example.waterfiltercompanion.ui.components.detailscard
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
@@ -14,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.waterfiltercompanion.R
 import com.example.waterfiltercompanion.ui.components.detailscard.content.DetailsContent
-import com.example.waterfiltercompanion.ui.components.detailscard.content.item.DetailsContentItem
 
 @ExperimentalAnimationApi
 @Composable
