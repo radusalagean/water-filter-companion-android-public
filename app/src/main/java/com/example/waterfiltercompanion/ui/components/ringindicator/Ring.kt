@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -27,10 +29,22 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.max
 
+private const val KEY_TRANSITION_SAVEABLE = "key-transition-saveable"
+
 private val bgStrokeWidthDp: Dp = 8.dp
 private val fgStrokeWidthDp: Dp = 12.dp
 
 private enum class TransitionState { INIT_START, INIT_END, FILLED }
+
+private val transitionStateSaver =
+    listSaver<MutableTransitionState<TransitionState>, TransitionState>(
+        save = {
+            listOf(it.currentState)
+        },
+        restore = {
+            MutableTransitionState(it[0])
+        }
+    )
 
 @Composable
 fun Ring(
@@ -56,7 +70,10 @@ fun Ring(
     val maxStroke = remember {
         max(bgStroke.width, fgStroke.width)
     }
-    val transitionState = remember {
+    val transitionState = rememberSaveable(
+        saver = transitionStateSaver,
+        key = KEY_TRANSITION_SAVEABLE
+    ) {
         MutableTransitionState(TransitionState.INIT_START)
     }
     val transition = updateTransition(

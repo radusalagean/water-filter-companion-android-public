@@ -1,9 +1,12 @@
 package com.example.waterfiltercompanion.ui.components.detailscard.content
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.waterfiltercompanion.R
@@ -26,13 +29,11 @@ fun DetailsContent(
     // Installed On
     installedOnFormatted: String?,
     onInstalledOnClick: () -> Unit,
-    installedOnCandidateFormatted: String?,
+    installedOnCandidateFormatted: String?
 ) {
-    Row(
-        modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)) {
-        val itemModifier = Modifier.weight(1f)
+
+    @Composable
+    fun Total(itemModifier: Modifier = Modifier) {
         DetailsContentItem(
             modifier = itemModifier,
             value = stringResourceWithFallback(
@@ -47,10 +48,10 @@ fun DetailsContent(
             onClick = onTotalCapacityClick,
             editMode = editMode
         )
-        Divider(
-            Modifier
-                .fillMaxHeight()
-                .width(1.dp))
+    }
+
+    @Composable
+    fun Remaining(itemModifier: Modifier = Modifier) {
         DetailsContentItem(
             modifier = itemModifier,
             value = stringResourceWithFallback(
@@ -65,10 +66,10 @@ fun DetailsContent(
             onClick = onRemainingCapacityClick,
             editMode = editMode
         )
-        Divider(
-            Modifier
-                .fillMaxHeight()
-                .width(1.dp))
+    }
+
+    @Composable
+    fun InstalledOn(itemModifier: Modifier = Modifier) {
         DetailsContentItem(
             modifier = itemModifier,
             value = stringWithFallback(installedOnFormatted),
@@ -78,4 +79,47 @@ fun DetailsContent(
             editMode = editMode
         )
     }
+
+    @Composable
+    fun DefaultLayout(modifier: Modifier = Modifier) {
+        Row(
+            modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)) {
+            val itemModifier = Modifier.weight(1f)
+            Total(itemModifier)
+            VerticalDivider()
+            Remaining(itemModifier)
+            VerticalDivider()
+            InstalledOn(itemModifier)
+        }
+    }
+
+    @Composable
+    fun LandscapeLayout(modifier: Modifier = Modifier) {
+        Column(modifier) {
+            Row(Modifier.height(IntrinsicSize.Min)) {
+                val itemModifier = Modifier.weight(1f)
+                Total(itemModifier)
+                VerticalDivider()
+                Remaining(itemModifier)
+            }
+            InstalledOn(Modifier.align(Alignment.CenterHorizontally))
+        }
+    }
+
+    val configuration = LocalConfiguration.current
+    when(configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> LandscapeLayout(modifier)
+        else -> DefaultLayout(modifier)
+    }
+
+}
+
+@Composable
+fun VerticalDivider() {
+    Divider(
+        Modifier
+            .fillMaxHeight()
+            .width(1.dp))
 }

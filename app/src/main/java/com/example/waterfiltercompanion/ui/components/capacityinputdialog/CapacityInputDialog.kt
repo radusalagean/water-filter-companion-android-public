@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,7 @@ import com.example.waterfiltercompanion.R
 @Composable
 fun CapacityInputDialog(modifier: Modifier = Modifier, config: CapacityInputDialogConfig?) {
     if (config == null) return
-    var input by remember { mutableStateOf(config.initialInput ?: "") }
+    var input by rememberSaveable { mutableStateOf(config.initialInput ?: "") }
     AlertDialog(
         modifier = modifier,
         onDismissRequest = config.onDismiss,
