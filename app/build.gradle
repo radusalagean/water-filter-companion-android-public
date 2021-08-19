@@ -59,6 +59,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     implementation "com.afollestad.material-dialogs:datetime:$materialDialogsVersion"
     implementation "androidx.preference:preference-ktx:$preferenceVersion"
+    implementation 'com.radusalagean:info-bar-compose:1.0.0'
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

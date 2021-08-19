@@ -12,9 +12,11 @@ import com.example.waterfiltercompanion.datapersistence.DataModel
 import com.example.waterfiltercompanion.datapersistence.LocalRepository
 import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialogConfig
 import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialogConfig
-import com.example.waterfiltercompanion.ui.components.infobar.InfoBarMessage
-import com.example.waterfiltercompanion.ui.components.infobar.InfoBarType
+import com.example.waterfiltercompanion.ui.theme.ColorInfoBarErrorBg
+import com.example.waterfiltercompanion.ui.theme.ColorInfoBarInfoBg
+import com.example.waterfiltercompanion.ui.theme.ColorInfoBarWarnBg
 import com.example.waterfiltercompanion.watercontrol.ConsumeWaterUseCase
+import com.radusalagean.infobarcompose.InfoBarMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -121,9 +123,9 @@ class MainViewModel @Inject constructor(
             !areCapacityValuesValid(tc = tc, rc = rc) ||
             io > System.currentTimeMillis()) {
             infoBarMessage = InfoBarMessage(
-                type = InfoBarType.ERROR,
-                textStringRes = R.string.message_invalid_input,
-                displayTimeSeconds = 5L
+                textStringResId = R.string.message_invalid_input,
+                backgroundColor = ColorInfoBarErrorBg,
+                displayTimeSeconds = 5
             )
             return
         }
@@ -137,8 +139,8 @@ class MainViewModel @Inject constructor(
             loadDataSync()
             leaveEditMode()
             infoBarMessage = InfoBarMessage(
-                type = InfoBarType.INFO,
-                textStringRes = R.string.message_data_saved
+                textStringResId = R.string.message_data_saved,
+                backgroundColor = ColorInfoBarInfoBg
             )
         }
     }
@@ -162,8 +164,8 @@ class MainViewModel @Inject constructor(
             confirmationDialogConfig = null
             leaveEditMode()
             infoBarMessage = InfoBarMessage(
-                type = InfoBarType.WARN,
-                textStringRes = R.string.message_data_cleared
+                textStringResId = R.string.message_data_cleared,
+                backgroundColor = ColorInfoBarWarnBg
             )
         }
     }
@@ -215,9 +217,9 @@ class MainViewModel @Inject constructor(
             consumeWaterUseCase(currentCapacity = remainingCapacity)
             remainingCapacity = localRepository.getRemainingCapacity()
             infoBarMessage = InfoBarMessage(
-                type = InfoBarType.INFO,
-                textStringRes = R.string.message_consumed,
-                args = listOf(ConsumeWaterUseCase.UNITS_TO_CONSUME)
+                textStringResId = R.string.message_consumed,
+                textStringResArgs = arrayOf(ConsumeWaterUseCase.UNITS_TO_CONSUME),
+                backgroundColor = ColorInfoBarInfoBg
             )
         }
     }
