@@ -103,7 +103,6 @@ private class DrawRealShadowModifier(
     }
 }
 
-@SuppressLint("ViewConstructor")
 private class ShadowedView(
     context: Context,
     attrs: AttributeSet? = null,
