@@ -6,10 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -24,6 +21,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 private const val KEY_TRANSITION_SAVEABLE = "key-transition-saveable"
@@ -49,8 +48,15 @@ fun Ring(
     bgColor: Color,
     fgColor: Color,
     fill: Float,
-    fgFillCb: ((Float) -> Unit)? = null
+    fgFillCb: ((Float) -> Unit)? = null,
+    recompositionChannel: (Channel<Unit>)? = null
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    SideEffect {
+        coroutineScope.launch {
+            recompositionChannel?.send(Unit)
+        }
+    }
     var bgStroke: Stroke
     var fgStroke: Stroke
     with(LocalDensity.current) {

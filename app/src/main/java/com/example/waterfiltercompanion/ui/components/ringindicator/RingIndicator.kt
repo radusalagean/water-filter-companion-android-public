@@ -13,13 +13,15 @@ import com.example.waterfiltercompanion.R
 import com.example.waterfiltercompanion.ui.theme.ColorRingBackground
 import com.example.waterfiltercompanion.ui.theme.ColorRingForeground
 import com.example.waterfiltercompanion.ui.utils.quantityStringResourceWithFallback
+import kotlinx.coroutines.channels.Channel
 import kotlin.math.roundToInt
 
 @Composable
 fun RingIndicator(
     modifier: Modifier = Modifier,
     fill: Float,
-    daysInUse: Int?
+    daysInUse: Int?,
+    recompositionChannel: (Channel<Unit>)? = null
 ) {
     var percentage by remember { mutableStateOf(0) }
     ConstraintLayout(modifier) {
@@ -28,10 +30,12 @@ fun RingIndicator(
             modifier = Modifier.fillMaxSize(),
             bgColor = MaterialTheme.colors.ColorRingBackground,
             fgColor = MaterialTheme.colors.ColorRingForeground,
-            fill = fill
-        ) { fgFill ->
-            percentage = (fgFill * 100).roundToInt()
-        }
+            fill = fill,
+            fgFillCb = { fgFill ->
+                percentage = (fgFill * 100).roundToInt()
+            },
+            recompositionChannel = recompositionChannel
+        )
         Text(
             modifier = Modifier.constrainAs(percentageRef) {
                 top.linkTo(parent.top)

@@ -7,7 +7,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.waterfiltercompanion.Shadowed
 import com.example.waterfiltercompanion.ui.components.capacityinputdialog.CapacityInputDialog
 import com.example.waterfiltercompanion.ui.components.confirmationdialog.ConfirmationDialog
 import com.example.waterfiltercompanion.ui.components.consumewaterfab.ConsumeWaterFab
@@ -25,6 +26,8 @@ import com.example.waterfiltercompanion.ui.theme.WaterFilterCompanionTheme
 import com.radusalagean.infobarcompose.InfoBar
 import com.radusalagean.infobarcompose.InfoBarEasing
 import com.radusalagean.infobarcompose.InfoBarSlideEffect
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @ExperimentalAnimationApi
 @Composable
@@ -38,7 +41,7 @@ fun MainScreen(viewModel: MainViewModel) {
             Box {
                 val contentPaddingModifier = Modifier.padding(16.dp)
                 val configuration = LocalConfiguration.current
-                when(configuration.orientation) {
+                when (configuration.orientation) {
                     Configuration.ORIENTATION_LANDSCAPE -> {
                         Row(contentPaddingModifier) {
                             val ringModifier = Modifier
@@ -71,13 +74,18 @@ fun MainScreen(viewModel: MainViewModel) {
                         }
                     }
                 }
-                ConsumeWaterFab(
+                Shadowed(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(16.dp),
-                    isShown = viewModel.consumeFabVisible,
-                    onConsume = viewModel::onConsume
-                )
+                    elevation = 4.dp
+                ) {
+                    ConsumeWaterFab(
+                        modifier = Modifier,
+                        isShown = viewModel.consumeFabVisible,
+                        onConsume = viewModel::onConsume
+                    )
+                }
                 CapacityInputDialog(config = viewModel.capacityInputDialogConfig)
                 ConfirmationDialog(config = viewModel.confirmationDialogConfig)
                 InfoBar(
@@ -113,11 +121,19 @@ private fun MainContent(
     ringModifier: Modifier,
     detailsCardModifier: Modifier
 ) {
-    RingIndicator(
+    val recompositionChannel = remember { Channel<Unit>() }
+    Shadowed(
         modifier = ringModifier,
-        fill = viewModel.waterFill,
-        daysInUse = viewModel.daysInUse
-    )
+        elevation = 4.dp,
+        flow = recompositionChannel.receiveAsFlow()
+    ) {
+        RingIndicator(
+            fill = viewModel.waterFill,
+            daysInUse = viewModel.daysInUse,
+            recompositionChannel = recompositionChannel
+        )
+    }
+
     DetailsCard(
         modifier = detailsCardModifier,
         editMode = viewModel.editMode,

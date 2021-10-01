@@ -7,3 +7,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Water Filter Companion"
 include ':app'
+include ':renderscript-toolkit'
